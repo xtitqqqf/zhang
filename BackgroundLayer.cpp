@@ -1,23 +1,27 @@
 #include "BackgroundLayer.h"
 
 
-BackgroundLayer::BackgroundLayer(void)
+
+BackgroundLayer::BackgroundLayer()
 {
 }
 
 
-BackgroundLayer::~BackgroundLayer(void)
+BackgroundLayer::~BackgroundLayer()
 {
 }
-bool BackgroundLayer::init(){
-	if(!CCLayer::init()){
+
+bool BackgroundLayer::init()
+{
+	if (!CCLayer::init())
+	{
 		return false;
 	}
-	CCSprite *bgSprite=CCSprite::create("bj01_01-ipadhd.png");
+	CCSprite *bgSprite = CCSprite::create(STATIC_DATA_STRING("game_background_01"));
 	this->addChild(bgSprite);
 
-	CCSize winSize =CCDirector::sharedDirector()->getWinSize();
-	//bgSprite->setPosition(CCPoint(winSize.width/2,winSize.height/2));
-	bgSprite->setPosition(this->getAnchorPointInPoints());
+	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+	bgSprite->setPosition(CCPoint(winSize.width / 2, winSize.height / 2));
 	return true;
+	
 }

@@ -1,23 +1,12 @@
+﻿
 #include "StaticData.h"
-USING_NS_CC;
-#define STATIC_DATA_PATH "static_data.plist"  
+
+
 static StaticData* g_sharedStaticData = NULL;
 
 
+StaticData* StaticData::sharedStaticData() {
 
-
-StaticData::StaticData(void)
-{
-	_staticDataPath = STATIC_DATA_PATH;
-}
-
-
-StaticData::~StaticData(void)
-{
-	CC_SAFE_RELEASE_NULL(_dictionary);
-}
-
- StaticData* StaticData::sharedStaticData() {
 	if (g_sharedStaticData == NULL) {
 		g_sharedStaticData = new StaticData();
 		g_sharedStaticData->init();
@@ -25,40 +14,61 @@ StaticData::~StaticData(void)
 	return g_sharedStaticData;
 }
 
-bool StaticData::init() {
-	_dictionary = CCDictionary::createWithContentsOfFile(_staticDataPath.c_str());
-	CC_SAFE_RETAIN(_dictionary);
-	return true;
+void StaticData::purge() {
+
+	CC_SAFE_RELEASE_NULL(g_sharedStaticData);
 }
 
-const char* StaticData::stringFromKey(std::string key) {
-	return _dictionary->valueForKey(key)->getCString();
-}
+int StaticData::intValueForKey(const std::string &key) {
 
-int StaticData::intFromKey(std::string key) {
 	return _dictionary->valueForKey(key)->intValue();
 }
 
-int StaticData::floatFromKey(std::string key) {
+const char* StaticData::stringValueFromKey(const std::string &key) {
+
+	return _dictionary->valueForKey(key)->getCString();
+}
+
+float StaticData::floatValueFromKey(const std::string &key) {
+
 	return _dictionary->valueForKey(key)->floatValue();
 }
 
-bool StaticData::booleanFromKey(std::string key) {
+//根据键值得到bool类型数据
+bool StaticData::booleanFromKey(const std::string &key) {
+
 	return _dictionary->valueForKey(key)->boolValue();
 }
 
-cocos2d::CCPoint StaticData::pointFromKey(std::string key) {
+cocos2d::CCPoint StaticData::pointFromKey(const std::string &key) {
+
 	return CCPointFromString(_dictionary->valueForKey(key)->getCString());
 }
 
-cocos2d::CCRect StaticData::rectFromKey(std::string key) {
+cocos2d::CCRect StaticData::rectFromKey(const std::string &key) {
+
 	return CCRectFromString(_dictionary->valueForKey(key)->getCString());
 }
 
-cocos2d::CCSize  StaticData::sizeFromKey(std::string key) {
+cocos2d::CCSize StaticData::sizeFormKey(const std::string &key) {
+
 	return CCSizeFromString(_dictionary->valueForKey(key)->getCString());
 }
 
-void purge() {
-	CC_SAFE_RELEASE_NULL(g_sharedStaticData);
+bool StaticData::init() {
+
+//创建出词典对象
+	_dictionary = CCDictionary::createWithContentsOfFile(_staticFileName.c_str());
+	_dictionary->retain();
+
+	return true;
+}
+
+StaticData::~StaticData() {
+
+	CC_SAFE_RELEASE_NULL(_dictionary);
+}
+
+StaticData::StaticData() {
+
 }

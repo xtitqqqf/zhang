@@ -1,6 +1,7 @@
 #include "GameScene.h"
 
 
+
 GameScene::GameScene()
 {
 }
@@ -8,86 +9,53 @@ GameScene::GameScene()
 
 GameScene::~GameScene()
 {
+	CC_SAFE_RELEASE_NULL(_menuLayer);
+	/*if (menuLayer)
+	{
+		menuLayer->release();
+		menuLayer = NULL;
+	}*/
 }
+
 bool GameScene::init()
 {
-	/*do  {...}while(0)本身没有实际意义，但有很多好处：
-	1、辅助定义复杂的宏，避免引用时出错（在引用宏时只是单单加{}话有可能会编译不过）
-	2、避免使用goto对程序流进行统一的控制，（goto 标签：）运行到goto时会跳过中间的操作
-		到标签：后的操作，进行跳过一些程序；但goto不符合软件工程结构尽量不用，do{..}while(0)
-		通过break可以跳出，实现。
-	3、避免空宏引起的warning
-		内核中由于不同架构的限制，很多时候会用到空宏，在编译的时候，空宏会给出warning，为了避免
-		这样的warning，就可以使用do{}while(0)来定义空宏
-	4、定义一个单独的函数块来实现复杂的操作：
-		当你的功能很复杂，变量很多你又不愿意增加一个函数的时候，使用do{}while(0);，将你的代码
-		写在里面，里面可以定义变量而不用考虑变量名会同函数之前或者之后的重复。
-	*/
+	/*if (!GameScene::init())
+	{
+		return false;
+	}
+	backgroundLayer = BackgroundLayer::create();
+	if (!backgroundLayer)
+	{
+		return false;
+	}
+	return true;*/
 	do
 	{
-		if (!CCScene::init())
+		if (!GameScene::init())
 		{
 			break;
 		}
-		/*创建背景层*/
-		preloadResources();
-		backgroundLayer = BackgroundLayer::create();
-		CC_BREAK_IF(!backgroundLayer);
-		this->addChild(backgroundLayer);
-		
+		_backgroundLayer = BackgroundLayer::create();
+		CC_BREAK_IF(!_backgroundLayer);
+		/*if (!backgroundLayer)
+		{
+			break;
+		}*/
+		this->addChild(_backgroundLayer);
+		_fishLayer = FishLayer::create();
+		CC_BREAK_IF(!_fishLayer);
+		this->addChild(_fishLayer);
 
-		fishLayer = FishLayer::create();
-		CC_BREAK_IF(!fishLayer);
-		this->addChild(fishLayer);
-		
+		_menuLayer = MenuLayer::create();
+		CC_BREAK_IF(!_menuLayer);
+		//menuLayer->retain();
 
-		menuLayer = MenuLayer::create();
-		CC_BREAK_IF(!menuLayer);
-		CC_SAFE_RETAIN(menuLayer);
+		CC_SAFE_RETAIN(_menuLayer);
+
 		return true;
+	} while (0);
 
-	}
-	while (0);
 	return false;
-}
 
-
-
-void GameScene::preloadResources(void)
-{
-	CCSpriteFrameCache *spriteFrameCache = CCSpriteFrameCache::sharedSpriteFrameCache();
-	spriteFrameCache->addSpriteFramesWithFile("FishActor-Large-ipadhd.plist");
-	spriteFrameCache->addSpriteFramesWithFile("FishActor-Marlin-ipadhd.plist");
-	spriteFrameCache->addSpriteFramesWithFile("FishActor-Shark-ipadhd.plist");
-	spriteFrameCache->addSpriteFramesWithFile("FishActor-Small-ipadhd.plist");
-	spriteFrameCache->addSpriteFramesWithFile("FishActor-Mid-ipadhd.plist");
-
-
-	/*字符串数组存鱼*/
-	char str[][50] = { "SmallFish", "Croaker", "AngelFish", "Amphiprion", "PufferS", "Bream", "Porgy", "Chelonian",
-		"Lantern", "Ray", "Shark", "GoldenTrout", "GShark", "GMarlinsFish", "GrouperFish", "JadePerch", "MarlinsFish", "PufferB" };
-
-	for (int i = 0; i < 18; i++)
-	{
-		CCArray *array = CCArray::createWithCapacity(10);
-		for (int j = 0; j < 10; j++)
-		{
-			CCString  *spriteFrameName = CCString::createWithFormat("%s_actor_%03d.png",str[i],j+1);
-			CCSpriteFrame *spriteFrame = spriteFrameCache->spriteFrameByName(spriteFrameName->getCString());
-			if (spriteFrame == NULL)
-			{
-				break;
-			}
-			array->addObject(spriteFrame);
-		}
-		if (array->count() == 0)
-		{
-			continue;
-		}
-		CCAnimation *animation = CCAnimation::createWithSpriteFrames(array,0.15f);
-		CCString *animationName = CCString::createWithFormat("fish_animation_%02d",i+1);
-		CCAnimationCache::sharedAnimationCache()->addAnimation(animation,animationName->getCString());
-
-	}
-
+	
 }
