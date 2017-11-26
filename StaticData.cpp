@@ -5,7 +5,8 @@
 static StaticData* g_sharedStaticData = NULL;
 
 
-StaticData* StaticData::sharedStaticData() {
+StaticData* StaticData::sharedStaticData() 
+{
 
 	if (g_sharedStaticData == NULL) {
 		g_sharedStaticData = new StaticData();
@@ -14,43 +15,45 @@ StaticData* StaticData::sharedStaticData() {
 	return g_sharedStaticData;
 }
 
-void StaticData::purge() {
+void StaticData::purge() 
+{
 
 	CC_SAFE_RELEASE_NULL(g_sharedStaticData);
 }
 
-int StaticData::intValueForKey(const std::string &key) {
+int StaticData::intValueForKey(const string &key)
+ {
 
 	return _dictionary->valueForKey(key)->intValue();
 }
 
-const char* StaticData::stringValueFromKey(const std::string &key) {
+const char* StaticData::stringValueFromKey(const string &key) {
 
 	return _dictionary->valueForKey(key)->getCString();
 }
 
-float StaticData::floatValueFromKey(const std::string &key) {
+float StaticData::floatValueFromKey(const string &key) {
 
 	return _dictionary->valueForKey(key)->floatValue();
 }
 
 //根据键值得到bool类型数据
-bool StaticData::booleanFromKey(const std::string &key) {
+bool StaticData::booleanFromKey(const string &key) {
 
 	return _dictionary->valueForKey(key)->boolValue();
 }
 
-cocos2d::CCPoint StaticData::pointFromKey(const std::string &key) {
+cocos2d::CCPoint StaticData::pointFromKey(const string &key) {
 
 	return CCPointFromString(_dictionary->valueForKey(key)->getCString());
 }
 
-cocos2d::CCRect StaticData::rectFromKey(const std::string &key) {
+cocos2d::CCRect StaticData::rectFromKey(const string &key) {
 
 	return CCRectFromString(_dictionary->valueForKey(key)->getCString());
 }
 
-cocos2d::CCSize StaticData::sizeFormKey(const std::string &key) {
+cocos2d::CCSize StaticData::sizeFormKey(const string &key) {
 
 	return CCSizeFromString(_dictionary->valueForKey(key)->getCString());
 }
@@ -71,4 +74,5 @@ StaticData::~StaticData() {
 
 StaticData::StaticData() {
 
+	_staticFileName = STATIC_DATA_FILENAME;
 }
