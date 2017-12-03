@@ -1,45 +1,50 @@
-#ifndef FISH_H
-#define FISH_H
-#pragma once
-#include"cocos2d.h"
-USING_NS_CC;
-
+#ifndef __FishingJoy__Fish__
+#define __FishingJoy__Fish__
+#include "cocos2d.h"
+#include "RotateWithAction.h"
 typedef enum{
+    //k_Fish_Type_Red = 0,
+    //k_Fish_Type_Yellow=1,
+	//k_Fish_Type_Count
 	k_Fish_Type_SmallFish = 0,
-	k_Fish_Type_Croaker,
-	k_Fish_Type_Count=17,//ÓãµÄÖÖÀàÊıÁ¿£¬¿ÉÒÔ¸ù¾İ²âÊÔµÄĞèÒªµ÷ÕûÎ»ÖÃ£¬ÔÚÕâÀïÖµÊÇ2
-	k_Fish_Type_AngleFish,
-	k_Fish_Type_Amphiprion,	//Ğ¡³óÓã
-	k_Fish_Type_PufferS,	//´Ìëà
-	k_Fish_Type_Bream,		//À¶É«
-	k_Fish_Type_Progy,		//ºìÉ«
-	k_Fish_Type_Chelonian,	//ÎÚ¹ê
-	k_Fish_Type_Lantern,	//µÆÁıÓã
-	k_Fish_Type_Ray,		//Ä§¹íÓã
-	k_Fish_Type_Shark,		//À¶É«öèÓã
-	k_Fish_Type_GoldenTrout,
-	k_Fish_Type_GShark,		//½ğÉ«öèÓã
-	k_Fish_Type_GMarlineFish,
-	k_Fish_Type_GrouperFish,
-	k_Fish_Type_JadePerch,	//±¦Ê¯Óã
-	k_Fish_Type_MarlineFish,
-	k_Fish_Type_PufferB,	//´ÌëàÊÜµ½¹¥»÷
-
+	    k_Fish_Type_Croaker,
+	    //é±¼çš„æ•°é‡ï¼Œå¯ä»¥æ ¹æ®æµ‹è¯•çš„éœ€è¦è°ƒæ•´ä½ç½®ï¼Œåœ¨è¿™é‡Œå€¼æ˜¯2
+	    k_Fish_Type_AngelFish,
+		k_Fish_Type_Amphiprion,	//å°ä¸‘é±¼
+		k_Fish_Type_PufferS,	//åˆºè±š
+		k_Fish_Type_Bream,		//è“è‰²
+		k_Fish_Type_Progy,		//çº¢è‰²
+		k_Fish_Type_Chelonian,	//ä¹Œé¾Ÿ
+		k_Fish_Type_Lantern,	//ç¯ç¬¼é±¼
+		k_Fish_Type_Ray,		//é­”é¬¼é±¼
+		k_Fish_Type_Shark,		//è“è‰²é²¨é±¼
+		k_Fish_Type_GoldenTrout,
+		k_Fish_Type_GShark,		//é‡‘è‰²é²¨é±¼
+		k_Fish_Type_GMarlineFish,
+		k_Fish_Type_GrouperFish,
+		k_Fish_Type_JadePerch,	//å®çŸ³é±¼
+		k_Fish_Type_MarlineFish,
+		k_Fish_Type_PufferB,	//åˆºè±šå—åˆ°æ”»å‡»
+		k_Fish_Type_Count,//k_Fish_Type_Count    
 }FishType;
 
-//using namespace cocos2d;
-class Fish :public CCNode
+class Fish : public cocos2d::CCNode
 {
 public:
-	Fish(void);
-	virtual ~Fish(void); 
-	static Fish *create(FishType type = k_Fish_Type_SmallFish);
-	virtual bool init(FishType type = k_Fish_Type_SmallFish);
-	int getScore();
-	int getSpeed();
-	CC_SYNTHESIZE(FishType,_type,Type);
-
+    static Fish* create(FishType type = k_Fish_Type_SmallFish);
+    bool init(FishType type = k_Fish_Type_SmallFish);
+    CC_SYNTHESIZE_READONLY(cocos2d::CCSprite*, _fishSprite, FishSprite);
+    CC_SYNTHESIZE_READONLY(int, _type, Type);
+	cocos2d::CCRect getCollisionArea();
+	void beCaught();
+	void moveTo(cocos2d::CCPoint destination);
+	void moveEnd();
+	void reset();
+	void moveBezier(cocos2d::CCPoint destination);
+	void Fish::moveIn(int direction);
+	CC_SYNTHESIZE_READONLY(RotateWithAction*,_RotateWithAction,RotateWithAction);
 protected:
-	CCSprite *_fishSprite;
+	void beCaught_CallFunc();
 };
+
 #endif
