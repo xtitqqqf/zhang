@@ -1,5 +1,5 @@
-#ifndef __FishingJoy__GameScene__
-#define __FishingJoy__GameScene__
+#ifndef __FishingJoy__GameScene3__
+#define __FishingJoy__GameScene3__
 #include "cocos2d.h"
 #include "FishLayer.h"
 #include "PanelLayer.h"
@@ -10,12 +10,12 @@
 #include "FishingJoyData.h"
 
 
-class GameScene : public cocos2d::CCScene
+class GameScene3 : public cocos2d::CCScene
 {
 public:
-    CREATE_FUNC(GameScene);
+    CREATE_FUNC(GameScene3);
     bool init();
-    ~GameScene();
+    ~GameScene3();
 
     //菜单页面相关的函数
     void pause();

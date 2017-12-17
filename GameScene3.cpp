@@ -1,22 +1,22 @@
-#include "GameScene.h"
+#include "GameScene3.h"
 #include "StaticData.h"
 #include "FishingJoyData.h"
 #include "StartScene.h"
 #include "GoldCounterLayer.h"
 #include "PersonalAudioEngine.h"
-//#include "ScheduleCountDown.h"
 USING_NS_CC;
-void GameScene::onEnterTransitionDidFinish()
+
+void GameScene3::onEnterTransitionDidFinish()
 {
     CCScene::onEnterTransitionDidFinish();
     PersonalAudioEngine::sharedEngine()->playBackgroundMusic(STATIC_DATA_STRING("bg_music"),true);
 }
-bool GameScene::init()
+bool GameScene3::init()
 {
     //preloadResources();	
     if(CCScene::init()){
 		CCSize winSize = CCDirector::sharedDirector()->getWinSize();        
-        CCSprite* background = CCSprite::create(STATIC_DATA_STRING("game_background_01"));
+        CCSprite* background = CCSprite::create(STATIC_DATA_STRING("game_background_03"));
 		background->setScale(1);
         background->setPosition(CCPointMake(winSize.width*0.5, winSize.height*0.5));
         this->addChild(background);
@@ -33,9 +33,6 @@ bool GameScene::init()
         _menuLayer = MenuLayer::create();
         CC_SAFE_RETAIN(_menuLayer);
 
-			
-		_panelLayer->getGoldCounterLayer()->setNumber(FishingJoyData::sharedFishingJoyData()->getGold());
-
 		_touchLayer=TouchLayer::create();
 		this->addChild(_touchLayer);
         this->scheduleUpdate();
@@ -43,63 +40,62 @@ bool GameScene::init()
     }
     return false;
 }
-void GameScene::pause()
+void GameScene3::pause()
 {
     this->operateAllSchedulerAndActions(this, k_Operate_Pause);
     this->addChild(_menuLayer);
 }
-void GameScene::resume()
+void GameScene3::resume()
 {
     this->operateAllSchedulerAndActions(this, k_Operate_Resume);
     this->removeChild(_menuLayer, false);
 }
-void GameScene::sound()
+void GameScene3::sound()
 {
 	bool flag = FishingJoyData::sharedFishingJoyData()->getSoundVolume()>0;
     PersonalAudioEngine::sharedEngine()->setEffectsVolume(!flag);
 }
-void GameScene::music()
+void GameScene3::music()
 {
 	bool flag = FishingJoyData::sharedFishingJoyData()->getMusicVolume()>0;
     PersonalAudioEngine::sharedEngine()->setBackgroundMusicVolume(!flag);
 }
-void GameScene::reset()
+void GameScene3::reset()
 {
 	this->removeChild(_menuLayer,false);
-	CCDirector::sharedDirector()->replaceScene(GameScene::create()); 
+	CCDirector::sharedDirector()->replaceScene(GameScene3::create()); 
 }
-void GameScene::transToMainMenu()
+void GameScene3::transToMainMenu()
 {
 	CCDirector::sharedDirector()->replaceScene(StartLayer::scene()); 
 }
-GameScene::~GameScene()
+GameScene3::~GameScene3()
 {
     CC_SAFE_RELEASE(_menuLayer);
 }
-void GameScene::alterGold(int delta)
+void GameScene3::alterGold(int delta)
 {
     FishingJoyData::sharedFishingJoyData()->alterGold(delta);
     _panelLayer->getGoldCounterLayer()->setNumber(FishingJoyData::sharedFishingJoyData()->getGold());
 }
-void GameScene::scheduleTimeUp()
+/*void GameScene3::scheduleTimeUp()
 {
- this->alterGold(STATIC_DATA_INT("recovery_gold"));
+    this->alterGold(STATIC_DATA_INT("recovery_gold"));
 }
-
-void GameScene::cannonAimAt(CCPoint target)
+*/
+void GameScene3::cannonAimAt(CCPoint target)
 {
     _cannonLayer->aimAt(target);
 }
-void GameScene::cannonShootTo(CCPoint target)
+void GameScene3::cannonShootTo(CCPoint target)
 {
     _cannonLayer->shootTo(target);
-    PersonalAudioEngine::sharedEngine()->playEffect(STATIC_DATA_STRING("sound_shot"));
 }
-void GameScene::update(float delat)
+void GameScene3::update(float delat)
 {
     checkOutCollision();
 }
-void GameScene::checkOutCollision()
+void GameScene3::checkOutCollision()
 {
     Weapon* weapon = _cannonLayer->getWeapon();
     if(weapon->weaponStatus() == k_Weapon_Status_Bullet){
@@ -109,7 +105,7 @@ void GameScene::checkOutCollision()
         }
     }
 }
-bool GameScene::checkOutCollisionBetweenFishesAndBullet()
+bool GameScene3::checkOutCollisionBetweenFishesAndBullet()
 {
     Weapon* weapon = _cannonLayer->getWeapon();
     CCPoint bulletCollision = weapon->getCollisionPoint();
@@ -129,7 +125,7 @@ bool GameScene::checkOutCollisionBetweenFishesAndBullet()
     }
     return false;
 }
-void GameScene::checkOutCollisionBetweenFishesAndFishingNet()
+void GameScene3::checkOutCollisionBetweenFishesAndFishingNet()
 {
     Weapon* weapon = _cannonLayer->getWeapon();
     CCRect bulletCollision = weapon->getCollisionArea();
@@ -147,20 +143,18 @@ void GameScene::checkOutCollisionBetweenFishesAndFishingNet()
         }
     }
 }
-void GameScene::fishWillBeCaught(Fish* fish)
+void GameScene3::fishWillBeCaught(Fish* fish)
 {
     int weaponType = _cannonLayer->getWeapon()->getCannonType();
     int fishType = fish->getType();
     float fish_percentage = STATIC_DATA_FLOAT(CCString::createWithFormat(STATIC_DATA_STRING("fish_percentage_format"),fishType)->getCString());
     float weapon_percentage = STATIC_DATA_FLOAT(CCString::createWithFormat(STATIC_DATA_STRING("weapon_percentage_format"),weaponType)->getCString());
     float percentage = weapon_percentage * fish_percentage;
-   // if(CCRANDOM_0_1() < percentage){
+    if(CCRANDOM_0_1() < percentage){
         fish->beCaught();
-  //  }
-		 int reward = STATIC_DATA_INT(CCString::createWithFormat(STATIC_DATA_STRING("reward_format"),fishType)->getCString());
-        this->alterGold(reward);
+    }
 }
-void GameScene::operateAllSchedulerAndActions(cocos2d::CCNode* node, OperateFlag flag)
+void GameScene3::operateAllSchedulerAndActions(cocos2d::CCNode* node, OperateFlag flag)
 {
     if(node->isRunning()){
         switch (flag) {
